@@ -1,13 +1,16 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import tw from 'tailwind-react-native-classnames';
+import { StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import BottomTabNavigator from './src/navigation/BottomTabNavigator';
 
-export default function Home() {
+export default function App() {
   return (
-    <View style={tw`flex-1 items-center justify-center bg-white`}>
-      <Text style={tw`text-lg font-bold text-blue-500`}>
-        Tailwind Working 🚀
-      </Text>
-    </View>
+    <SafeAreaProvider>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <NavigationContainer>
+        <BottomTabNavigator />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
