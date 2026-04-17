@@ -18,8 +18,8 @@ export default function HeaderLogo({ showSubtitle = true }) {
         <View>
           <Text
             style={[
-              tw`font-bold text-2xl leading-none`,
-              { color: NAVY_BLUE },
+              tw`font-bold text-2xl`,
+              { color: NAVY_BLUE, lineHeight: 28 },
             ]}
           >
             Agency Garage

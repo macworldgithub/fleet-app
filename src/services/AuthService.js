@@ -31,8 +31,9 @@ const AuthService = {
         throw new Error(data.message || 'Login failed');
       }
 
-      if (data.token) {
-        await AsyncStorage.setItem('userToken', data.token);
+      const tokenToStore = data.token || data.accessToken;
+      if (tokenToStore) {
+        await AsyncStorage.setItem('userToken', tokenToStore);
         const userToStore = data.user || data.driver || data;
         await AsyncStorage.setItem('userData', JSON.stringify(userToStore));
       }
@@ -155,6 +156,61 @@ const AuthService = {
       return data;
     } catch (error) {
       console.error('Get Agencies Error:', error);
+      throw error;
+    }
+  },
+
+  getUserById: async (userId) => {
+    logRequest('GET_USER_BY_ID', { userId });
+    try {
+      const token = await AuthService.getToken();
+      const response = await fetch(`${BASE_URL}/users/${userId}`, {
+        method: 'GET',
+        headers: {
+          'accept': '*/*',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      const data = await response.json();
+      logResponse('GET_USER_BY_ID', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to fetch user profile');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Get User By Id Error:', error);
+      throw error;
+    }
+  },
+
+  changePassword: async (currentPassword, newPassword) => {
+    const payload = { currentPassword, newPassword };
+    logRequest('CHANGE_PASSWORD', payload);
+    try {
+      const token = await AuthService.getToken();
+      const response = await fetch(`${BASE_URL}/auth/change-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': '*/*',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      logResponse('CHANGE_PASSWORD', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to change password');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Change Password Error:', error);
       throw error;
     }
   },
